@@ -192,6 +192,100 @@ int bestMove(char Board[][SIDE],int moveIndex)
     return (x*3+y);
 }
 
+void TicTacToe()
+{
+    string player1,player2;
+    cout<<"Enter the name of player 1 : ";
+    cin.ignore();
+    cin>>player1;
+    cout<<"Enter the name of player 2 : ";
+    cin.ignore();
+    cin>>player2;
+    x:
+        cout<<"who will play first ,"<<player1<<" or "<<player2<<" : ";
+        string p;
+        cin>>p;
+    if(p!=player1 && p!=player2)
+    {
+        cout<<p<<" is not a registered player"<<endl;
+        goto x;
+    }
+    if(p!=player1)
+    {
+        swap(player1,player2);
+    }
+    char Board[SIDE][SIDE];
+    initialise(Board);
+    showInstruction();
+    char ch1='X';
+    int moveIndex=0;    
+    p=player1;
+    while(gameOver(Board) == false && moveIndex!=SIDE*SIDE)
+    {
+        showBoard(Board);
+        
+        cout<<"CURRENT TURN : "<<p<<endl;   
+        cout<<"\nYou can insert at the following position : \n";
+        for(int i=0;i<SIDE;i++)
+        {
+            for(int j=0;j<SIDE;j++)
+            {
+                if(Board[i][j] == '*')
+                {
+                        cout<< (i*3+j)+1 <<" ";
+                }
+            }
+        }
+        cout<<"Enter the position you want : ";
+        int n,x,y;
+        cin>>n;
+        n--;
+        x=n/SIDE;
+        y=n%SIDE;
+        if(Board[x][y]!='*' && n<9 && n>=0)
+        {
+            cout<<"\nTHE POSITION IS ALREADY OCCUPIED .."<<endl<<"Enter a VALID position : "<<endl;
+        }
+        else if(Board[x][y]=='*' && n<9 && n>=0)
+        {
+            Board[x][y]=ch1;
+            if(ch1=='X')
+            {
+                p=player2;
+                ch1='O';
+            }
+            else{
+                p=player1;
+                ch1='X';
+            }
+            moveIndex++;
+        }
+        else
+        {
+            cout<<"Enter A Valid Position ..."<<endl;
+        }
+        
+    }
+    if(gameOver(Board)==false && moveIndex==SIDE*SIDE)
+    {
+        cout<<"IT IS A DRAW "<<endl;
+    }
+    else
+    {
+        showBoard(Board);
+        if(ch1=='O')
+        {
+            cout<<"\n"<<player1<<" WON !!!!!!"<<endl;
+
+        }
+        else
+        {
+            cout<<"\n"<<player2<<" WON !!!!!!!"<<endl;
+        }
+    }
+    
+}
+
 void playTicTacToe(int whoseTurn)
 {
     char Board[SIDE][SIDE];
@@ -205,7 +299,6 @@ void playTicTacToe(int whoseTurn)
         int n;
         if(whoseTurn == computer)
         {
-            cout<<"hj";
             n=bestMove(Board,moveIndex);
             x=n/SIDE;
             y=n%SIDE;
@@ -228,14 +321,14 @@ void playTicTacToe(int whoseTurn)
                     }
                 }
             }
-            cout<<"Enter the position you want : ";
-            scanf("%d",&n);
+            cout<<"\nEnter the position you want : ";
+            cin>>n;
             n--;
             x=n/SIDE;
             y=n%SIDE;
             if(Board[x][y] !='*' && n<9 && n>=0)
             {
-                printf("Position is already occupied!! \n PLEASE ENTER A SUITABLE POSITION : ");
+                printf("\nPosition is already occupied!! \n PLEASE ENTER A SUITABLE POSITION : ");
 
             }
             else if(Board[x][y] =='*' && n<9 && n>=0)
@@ -254,7 +347,7 @@ void playTicTacToe(int whoseTurn)
     }
     if(gameOver(Board)==false && moveIndex==SIDE*SIDE)
     {
-        printf("It is a DRAW !!!! \n\a");
+        printf("\nIt is a DRAW !!!! \n\a");
     }
     else
     {
@@ -271,29 +364,58 @@ void playTicTacToe(int whoseTurn)
 
 int main()
 {
-    int x,ch='a';
-    // while(ch=='q' || ch=='Q')
-    // {
-    //     cout<<"Press Y to start first or N to start second: ";
-    //     scanf("%c",&x);
-    //     if(x=='Y' || x=='y')
-    //     {
-    //         playTicTacToe(human);
-    
-    //     }
-    //     else if(x=='N' || x=='n')
-    //     {
-    //         playTicTacToe(computer);
-    //     }
-    //     else
-    //     {
-    //         printf("Enter a valid choice Y or N\n");
-    //     }
-    //     printf("Press Q to quit : ");
-    //     scanf("%c",&ch);
-        
-    // }
-    playTicTacToe(human);
-   // playTicTacToe(computer);
+    int x,ch;
+    int choice;
+    while(true)
+    {   
+           y:
+            cout<<"\nPress 1 for Player VS AI\nPress 2 for Player VS Player :\n";
+            cin>>choice;
+        switch(choice)
+        {
+            case 1:
+                int ch;
+                cout<<"\nEnter who will play first chance\nPress 1 for human\nPress 2 for AI :1\n ";
+                cin>>ch;
+                while(ch!=1 && ch!=2)
+                {
+                    cout<<"Invalid Option Please Enter a Valid Choice"<<endl;
+                    cout<<"\nEnter 1 for Human\nEnter 2 for AI"<<endl;
+                    cin>>ch;
+                }
+                if(ch==1)
+                {
+
+                    playTicTacToe(human);
+                    break;
+                }
+                else
+                {
+                    playTicTacToe(computer);
+                    break;
+                }
+                break;
+            case 2:
+                TicTacToe();
+                    break;
+            default:
+                goto y;
+        }
+        char x;
+        z:
+            cout<<"\nDo you want to play again? (y/n): ";
+            cin>>x;
+        if(x=='n' || x=='N')
+        {
+            cout<<"\nTHANKS FOR PLAYING\n";
+            return 0;
+        }
+        else if(x!='Y' && x!='y')
+        {
+            cout<<"\nEnter a valid choice "<<endl;
+            goto z;
+        }
+        cout<<"\n\n\n";
+    }
     return 0;
 }
